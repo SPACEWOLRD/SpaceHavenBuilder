@@ -1,0 +1,9 @@
+[arrows keys] to move
+[g] toggle id on object
+[ESCAPE] open menu
+[u] undo
+[z] & [s] zoom
+[a] & [e] change obj in categorie
+[q] & [d] change categorie
+[r] rotate
+[x] delete

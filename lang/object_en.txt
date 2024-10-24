@@ -1,0 +1,89 @@
+## Walls ##
+   101: hull
+   102: wall
+   103: door X1
+   104: door X2
+   105: spacesuit door
+   106: station hatch
+## Furniture ##
+   201: bed
+   202: nightstand
+   203: table
+   204: sofa X1
+   205: sofa X2
+## Installation ##
+   301: research terminal
+   302: research bench
+   303: hyperstasis capsule
+   304: hypersate tank
+   305: medical bed
+   306: toilet
+   307: Arcade/JukeBox
+   308: augmentation bed
+   309: oxygen generator
+   310: atmospheric purifier
+   311: heater
+## Electricity ##
+   401: generator
+   402: small node
+   403: large node
+   404: battery node
+   405: emergency node
+   406: generator X1
+   407: generator X2
+   408: generator X3
+   409: solar panel
+## Resources ##
+   501: object workbench
+   502: tool bench
+   503: water purifier
+   504: dehumidifier
+   505: ore sorter
+   506: recycler
+   507: composter
+   508: object printer
+   509: metal converter
+   510: micro weaver
+   511: assembler
+   512: energy converter
+   513: chemical converter
+   514: optronic printer
+   514: advanced assembler
+## Food ##
+   601: algae dispenser
+   602: kitchen
+   603: alcohol dispenser
+   604: cultivator X1
+   605: cultivator X2
+   606: cultivator X3
+   607: O2 producer
+   608: autopsy table
+## Storage ##
+   701: small storage
+   702: large storage
+   703: morgue
+   704: docking port
+## Airlock ##
+   801: locker room
+   802: airlock
+   803: pod
+   804: shuttle
+## Systems ##
+   901: system core X1
+   902: system core X2
+   903: system core X3
+   904: hull stabilizer
+   905: navigation console
+   906: communication console
+   907: shield console
+   908: weapon console
+   909: hyperium hyperdrive
+   910: hyperdrive X1
+   911: small shield generator
+   912: shield generator
+   913: defense turret
+   914: auto turret
+   915: rocket turret
+   916: energy turret
+   917: scanner
+   918: jammer

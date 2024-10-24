@@ -1,0 +1,89 @@
+## Parois ##
+   101: coque
+   102: mur
+   103: porte X1
+   104: porte X2
+   105: porte à scaphandre
+   106: écoutille de station
+## Ameublement ##
+   201: lit
+   202: table de nuit
+   203: table
+   204: canapé X1
+   205: canapé X2
+## Installation ##
+   301: terminal de recherche
+   302: paillasse de recherche
+   303: capsule d'hyperstase
+   304: cuve d'hypersate
+   305: lit médicalisé
+   306: toilette
+   307: Borne-arcade/JukeBox
+   308: lit à augmentation/asservissement
+   309: génératrice à oxygène
+   310: épuratrice atmosphérique
+   311: chauffage
+## Electricité ##
+   401: génératrice
+   402: petit noeud
+   403: grand noeud
+   404: noeud batterie
+   405: noeud courant de secours
+   406: génératrice X1
+   407: génératrice X2
+   408: génératrice X3
+   409: panneau solaire
+## Ressource ##
+   501: établie d'objet
+   502: outilleuse
+   503: purificatrice d'eau
+   504: déshumidificatrice
+   505: trieuse de minerai
+   506: recycleuse
+   507: composteur
+   508: imprimante d'objet
+   509: convertisseuse de métaux
+   510: micro tisseuse
+   511: assembleuse
+   512: convertisseuse d'énergie
+   513: convertisseuse chimique
+   514: imprimante d'optronique
+   514: assembleuse avancée
+## Nourriture ##
+   601: distributrice d'algue
+   602: cuisine
+   603: distributrice à alcool
+   604: cultivatrice X1
+   605: cultivatrice X2
+   606: cultivatrice X3
+   607: productrice de O2
+   608: table d'autopsie
+## Stocakge ##
+   701: petit stockage
+   702: grand stockage
+   703: morgue
+   704: port d'amarrage
+## Sas ##
+   801: vestiaire
+   802: sas
+   803: nacelle
+   804: navette
+## Système ##
+   901: noyau sytème X1
+   902: noyau système X2
+   903: noyau système X3
+   904: stabilisateur de coque
+   905: console de navigation
+   906: console de communication
+   907: console de bouclier
+   908: console de d'armement
+   909: hypermoteur à hyperium
+   910: hypermoteur X1
+   911: petit générateur de bouclier
+   912: générateur de bouclier
+   913: tourelle de defense
+   914: tourelle auto
+   915: tourelle à rockette
+   916: tourelle à énergie
+   917: scanneuse
+   918: brouilleur
