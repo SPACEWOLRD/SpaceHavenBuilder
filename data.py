@@ -75,11 +75,16 @@ class Props(pg.sprite.Sprite):
         self.obj_id = obj_id
         self.display_name = display_name
 
-    def draw(self, screen:pg.Surface, ids:bool=True) -> None:
+    def draw(self, screen:pg.Surface, ids:bool=True, display_masks:int=0) -> None:
         surf = self.image.copy()
         if ids and self.display_name:
             surf.blit(self.text_surf, self.text_rect)
-        screen.blit(surf, self.rect)
+        if display_masks == 0:
+            screen.blit(surf, self.rect)
+        elif display_masks == 1:
+            screen.blit(self.masks[0], self.rect)
+        elif display_masks == 2:
+            screen.blit(self.masks[1], self.rect)
 
     def create_id(self, grid:list, obj_id:int, angle:int):
         xt, yt, widtht, heightt = largest_rectangle_in_grid(grid)
@@ -120,7 +125,7 @@ OBJ_DICT = {
         Object([[1]], (0, 0), 102, 'source/mur.png', OBJ_NAME[CAT_NAME[0]][1], False),
         Object([[-1, 1, -1]], (1, 0), 103, 'source/porte X1.png', OBJ_NAME[CAT_NAME[0]][2], False),
         Object([[-1, 1, -1], [-1, 1, -1]], (1, 0), 104, 'source/porte X2.png', OBJ_NAME[CAT_NAME[0]][3], False),
-        Object([[0, -1, 0], [-1, 1, -1], [0, 1, 0]], (1, 1, ), 105, 'source/porte_scaphandre.png', OBJ_NAME[CAT_NAME[0]][4], False),
+        Object([[0, -1, 0], [-1, 1, -1], [0, 1, 0]], (1, 1), 105, 'source/porte_scaphandre.png', OBJ_NAME[CAT_NAME[0]][4], False),
         Object([[0, -1, 0], [-1, 1, -1], [0, 1, 0], [0, -1, 0]], (1, 1), 106, 'source/ecoutille.png', OBJ_NAME[CAT_NAME[0]][5], False)
     ],
     CAT_NAME[1]: [
@@ -168,8 +173,8 @@ OBJ_DICT = {
         Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 0), 511, 'source/assembleuse.png', OBJ_NAME[CAT_NAME[4]][10]),
         Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 1), 512, 'source/convertisseuse_energie.png', OBJ_NAME[CAT_NAME[4]][11]),
         Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 1), 513, 'source/convertisseuse_chimique.png', OBJ_NAME[CAT_NAME[4]][12]),
-        Object([[1, 1, 1, 1], [-1, 1, 1, 1], [-1, -1, -1, -1]], (1, 1), 514, 'source/imprimante_optronique.png', OBJ_NAME[CAT_NAME[4]][13]),
-        Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 1), 514, 'source/assembleuse_avancee.png', OBJ_NAME[CAT_NAME[4]][14])
+        Object([[1, 1, 1], [-1, 1, 1], [-1, -1, -1]], (1, 1), 514, 'source/imprimante_optronique.png', OBJ_NAME[CAT_NAME[4]][13]),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1],[-1, -1, -1]], (1, 1), 514, 'source/assembleuse_avancee.png', OBJ_NAME[CAT_NAME[4]][14])
     ],
     CAT_NAME[5]: [
         Object([[1, 1], [-1, -1]], (0, 0), 601, 'source/algue.png', OBJ_NAME[CAT_NAME[5]][0]),
@@ -206,13 +211,13 @@ OBJ_DICT = {
         Object([[-1, 1, 1, -1], [-1, 1, 1, -1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]], (2, 1), 909, 'source/hypermoteur.png', OBJ_NAME[CAT_NAME[8]][8]), # without the nope zone to note interacte with the border, may do this with the sas or rework the border system
         Object([[-1, 1, 1, -1], [-1, 1, 1, -1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]], (2, 1), 910, 'source/hypermoteur.png', OBJ_NAME[CAT_NAME[8]][9]),
         Object([[1, 1], [1, 1]], (0, 0), 911, 'source/petit_bouclier.png', OBJ_NAME[CAT_NAME[8]][10]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, 1, 0]], (1, 1), 912, 'source/bouclier.png', OBJ_NAME[CAT_NAME[8]][11]),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 912, 'source/bouclier.png', OBJ_NAME[CAT_NAME[8]][11]),
         Object([[1, 1], [1, 1]], (0, 0), 913, 'source/tourelle_2x.png', OBJ_NAME[CAT_NAME[8]][12]),
         Object([[1, 1], [1, 1]], (0, 0), 914, 'source/tourelle_2x.png', OBJ_NAME[CAT_NAME[8]][13]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, 1, 0]], (1, 1), 915, 'source/tourelle_3x.png', OBJ_NAME[CAT_NAME[8]][14]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, 1, 0]], (1, 1), 916, 'source/tourelle_3x.png', OBJ_NAME[CAT_NAME[8]][15]),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 915, 'source/tourelle_3x.png', OBJ_NAME[CAT_NAME[8]][14]),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 916, 'source/tourelle_3x.png', OBJ_NAME[CAT_NAME[8]][15]),
         Object([[1, 1, 1], [1, 1, 1], [1, 1, 1]], (1, 1), 917, 'source/scanneuse.png', OBJ_NAME[CAT_NAME[8]][16]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, 1, 0]], (1, 1), 918, 'source/brouilleur.png', OBJ_NAME[CAT_NAME[8]][17])
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 918, 'source/brouilleur.png', OBJ_NAME[CAT_NAME[8]][17])
     ]
     # robot, station
 }
