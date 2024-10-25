@@ -40,6 +40,9 @@ obj_index = 0
 cat_index = 0
 current_obj = OBJ_DICT[CAT_LIST[cat_index]][obj_index]
 
+# energie
+energie = 0
+
 # undo
 action = []
 
@@ -75,7 +78,7 @@ while run:
         if mouse_pressed == True:
             mouse_b = True
             if not menu[0]:
-                current_obj.place(object_group, pos_to_grid(mouse_pos), action)
+                if current_obj.place(object_group, pos_to_grid(mouse_pos), action): energie += current_obj.energie
         mouse_pressed = False
         
     # event
@@ -112,6 +115,7 @@ while run:
                 # undo
                 if event.key == pg.K_u:
                     if len(action) > 0:
+                        energie -= action[-1].energie
                         action[-1].kill()
                         action.pop()
                         print('undo action')
@@ -163,6 +167,7 @@ while run:
                                     action.remove(obj)
                                 except: 
                                     pass
+                            energie -= obj.energie
                             obj.kill()
                             print('delete')
 
@@ -214,7 +219,7 @@ while run:
         screen.blit(pg.transform.scale_by(game_surf, scale), (x, y))
 
         # draw info
-        display_selected_object_info(info_surface, current_obj, CAT_LIST[cat_index])
+        display_selected_object_info(info_surface, current_obj, CAT_LIST[cat_index], energie)
         screen.blit(info_surface, (0, 0))
     else:
         screen.fill(LIGHT_DARK)
