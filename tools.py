@@ -70,12 +70,14 @@ def pos_to_grid(pos:tuple) -> tuple:
     y_grid = (y//TILE_SIZE) * TILE_SIZE
     return (x_grid, y_grid)
 
-def display_selected_object_info(surface:pg.Surface, object, categorie:str):
+def display_selected_object_info(surface:pg.Surface, object, categorie:str, energie:float):
     surface.fill((200, 200, 200))  # Efface la surface précédente
     # Affiche les détails de l'objet sélectionné
     font = pg.font.Font(None, 36)
     text = font.render(f"{SELECTED}: {object.name} ({categorie})", True, (0, 0, 0))
+    energie_text = font.render(f'energie: {round(energie, 1)}', True, GREEN if energie >= 0 else RED)
     surface.blit(text, (10, 10))
+    surface.blit(energie_text, (surface.get_width()-(energie_text.get_width() + ENERGIE_OFFSET), 10))
 
 def image_alpha_mask(image:pg.Surface, mask:pg.Mask) -> pg.Surface:
     # Parcourir les pixels du masque pour rendre l'image transparente là où le masque est noir
@@ -93,7 +95,7 @@ def save(name: str, group: pg.sprite.Group) -> bool:
     if name!='' and not os.path.exists(f'data/{name}.csv'):
         with open(f'data/{name}.csv', 'w', encoding='utf-8', newline='') as f:
             # Créer l'écrivain avec les noms des colonnes
-            fieldnames = ['pos', 'grid', 'path', 'angle', 'obj_id', 'display_name']
+            fieldnames = ['pos', 'grid', 'path', 'angle', 'obj_id', 'display_name' , 'energie']
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -105,7 +107,8 @@ def save(name: str, group: pg.sprite.Group) -> bool:
                     'path': sprite.path,
                     'angle': sprite.angle,
                     'obj_id': sprite.obj_id,
-                    'display_name': sprite.display_name
+                    'display_name': sprite.display_name,
+                    'energie': sprite.energie,
                 })
         return True
     else:
@@ -126,9 +129,10 @@ def load(name: str, group: pg.sprite.Group, Props) -> bool:
                 angle = float(row['angle'])  # Convertir angle en float
                 obj_id = int(row['obj_id'])
                 display_name = eval(row['display_name'])
+                energie = float(row['energie'])
 
                 # Recréer le sprite avec Props
-                Props(group, pos, grid, path, angle, obj_id, display_name)
+                Props(group, pos, grid, path, angle, obj_id, display_name, energie)
         return True
     else:
         print(f'no file: {name}')
