@@ -16,7 +16,7 @@ pg.display.set_caption('SpaceHavenBuilder (InBuild)')
 x, y = 0, 0
 velx, vely = 0, 0
 game_surf = pg.surface.Surface(GRID_SIZE)
-grid = create_grid((1350, 1350), TILE_SIZE, 27*NBR_CELLS[0], 27*NBR_CELLS[1])
+grid = create_grid((TILE_SIZE*27*NBR_CELLS[0], TILE_SIZE*27*NBR_CELLS[1]), TILE_SIZE, 27*NBR_CELLS[0], 27*NBR_CELLS[1])
 
 # scaling
 scale = 1
@@ -28,7 +28,7 @@ lines = []
 for xt in range(1, NBR_CELLS[0]):
     lines.append(Line((27*25*xt, 0), (27*25*xt, 54*25*NBR_CELLS[1])))
 for yt in range(1, NBR_CELLS[1]):
-    lines.append(Line((0, 27*25*yt), (27*25*NBR_CELLS[0], 27*25*yt)))
+    lines.append(Line((0, 27*25*yt), (27*25*NBR_CELLS[1], 27*25*yt)))
 
 # Création de la surface pour afficher les détails de l'objet sélectionné
 info_surface = pg.Surface((SCREEN_WIDTH, 50))
@@ -56,6 +56,9 @@ save_button = Button(buttons, (SCREEN_WIDTH//2, 400), (500, 50), MENUS[1], LIGHT
 render_button = Button(buttons, (SCREEN_WIDTH//2, 500), (500, 50), MENUS[2], YELLOW, GREY, 40, lambda x: print('render') if render_surface(x[0], x[3]) else print(f'to much img: {x[0]}'), True)
 exit_button = Button(buttons, (SCREEN_WIDTH//2, 600), (500, 50), MENUS[3], LIGHT_RED, GREY, 40, lambda: (pg.quit(), quit()))
 
+# DEBUG
+display_masks = 0
+
 # game loop
 run = True
 while run:
@@ -80,10 +83,6 @@ while run:
         if event.type == pg.QUIT:
             run = False
         if event.type == pg.KEYDOWN:
-            # toggle ids
-            if event.key == pg.K_g:
-                if ids: ids = False
-                else: ids = True
 
             # toggle menu
             if event.key == pg.K_ESCAPE:
@@ -103,6 +102,13 @@ while run:
                         line.draw(game_surf)
 
             if not menu[0]:
+                # toggle display masks
+                if event.key == pg.K_i:
+                    display_masks = (display_masks+1)%3
+                # toggle ids
+                if event.key == pg.K_g:
+                    if ids: ids = False
+                    else: ids = True
                 # undo
                 if event.key == pg.K_u:
                     if len(action) > 0:
@@ -197,7 +203,7 @@ while run:
         # draw object
         for obj in object_group:
             obj:Props
-            obj.draw(game_surf, ids)
+            obj.draw(game_surf, ids, display_masks)
         # draw lines
         for line in lines:
             line.draw(game_surf)
