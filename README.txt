@@ -7,10 +7,6 @@ your save files are save in 'data/'
 your rendered imgs are save in 'img/'
 you dont need to touch img in 'source/'
 
-yeah i know, my code is not realy "Clean"
-and i use some dark trick
-but the program works so no problem
-
 currently, the langage is english but you can copy and past what is in the 'lang/fr.py' in the 'current_langage.py'
 
 run 'main.py' to use the program
