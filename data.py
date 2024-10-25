@@ -175,7 +175,7 @@ OBJ_DICT = {
         Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 0), 511, 'source/assembleuse.png', OBJ_NAME[CAT_NAME[4]][10], -40),
         Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 1), 512, 'source/convertisseuse_energie.png', OBJ_NAME[CAT_NAME[4]][11], -100),
         Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 1), 513, 'source/convertisseuse_chimique.png', OBJ_NAME[CAT_NAME[4]][12], -100),
-        Object([[1, 1, 1], [-1, 1, 1], [-1, -1, -1]], (1, 1), 514, 'source/imprimante_optronique.png', OBJ_NAME[CAT_NAME[4]][13], -60),
+        Object([[1, 1, 1, 1], [-1, 1, 1, 1], [-1, -1, -1, -1]], (1, 1), 514, 'source/imprimante_optronique.png', OBJ_NAME[CAT_NAME[4]][13], -60),
         Object([[1, 1, 1], [1, 1, 1], [1, 1, 1],[-1, -1, -1]], (1, 1), 514, 'source/assembleuse_avancee.png', OBJ_NAME[CAT_NAME[4]][14], -60)
     ],
     CAT_NAME[5]: [
