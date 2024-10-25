@@ -14,3 +14,5 @@ but the program works so no problem
 currently, the langage is english but you can copy and past what is in the 'lang/fr.py' in the 'current_langage.py'
 
 run 'main.py' to use the program
+you need pygame
+run in the terminal: pip install pygame
