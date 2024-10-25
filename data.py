@@ -5,7 +5,7 @@ import pygame as pg
 
 
 class Object:
-    def __init__(self, grid:list, center:tuple, obj_id:int, path:str, name:str, display_name: bool = True) -> None:
+    def __init__(self, grid:list, center:tuple, obj_id:int, path:str, name:str, energie:float=0, display_name: bool = True) -> None:
         self.name = name
         self.obj_id = obj_id
         self.display_name = display_name
@@ -16,6 +16,7 @@ class Object:
         self.angle = 0
         rect = pg.image.load(path).get_rect()
         self.surf = pg.surface.Surface((rect.width, rect.height))
+        self.energie = energie
 
     def rotate(self, angle:int=90) -> None:
         self.angle = (self.angle+90)%360
@@ -27,10 +28,10 @@ class Object:
             prop:Props
             if check_masks_collision(self.masks, prop.masks, get_offset(prop.rect.topleft, pos)):
                 print('Collision')
-                break
-        else:
-            action.append(Props(group, pos, self.grid, self.img_path, self.angle, self.obj_id, self.display_name))
-            print('place')
+                return False
+        action.append(Props(group, pos, self.grid, self.img_path, self.angle, self.obj_id, self.display_name, self.energie))
+        print('place')
+        return True
 
     def draw(self, screen:pg.Surface, pos:tuple, group:pg.sprite.Group) -> None:
         # check if collide
@@ -58,7 +59,7 @@ class Object:
 
 
 class Props(pg.sprite.Sprite):
-    def __init__(self, group:pg.sprite.Group, pos:tuple, grid:list, path:str, angle:int, obj_id:int, display_name:bool) -> None:
+    def __init__(self, group:pg.sprite.Group, pos:tuple, grid:list, path:str, angle:int, obj_id:int, display_name:bool, energie:float=0) -> None:
         super().__init__(group)
         self.masks = [pg.transform.rotate(mask, angle) for mask in create_masks(grid)]
         self.image = image_alpha_mask(pg.transform.rotate(pg.image.load(path), angle), self.masks[1])
@@ -74,6 +75,7 @@ class Props(pg.sprite.Sprite):
         self.pos = pos
         self.obj_id = obj_id
         self.display_name = display_name
+        self.energie = energie
 
     def draw(self, screen:pg.Surface, ids:bool=True, display_masks:int=0) -> None:
         surf = self.image.copy()
@@ -121,12 +123,12 @@ class Props(pg.sprite.Sprite):
 ### DATA ###
 OBJ_DICT = {
     CAT_NAME[0]: [
-        Object([[1]], (0, 0), 101, 'source/coque.png', OBJ_NAME[CAT_NAME[0]][0], False),
-        Object([[1]], (0, 0), 102, 'source/mur.png', OBJ_NAME[CAT_NAME[0]][1], False),
-        Object([[-1, 1, -1]], (1, 0), 103, 'source/porte X1.png', OBJ_NAME[CAT_NAME[0]][2], False),
-        Object([[-1, 1, -1], [-1, 1, -1]], (1, 0), 104, 'source/porte X2.png', OBJ_NAME[CAT_NAME[0]][3], False),
-        Object([[0, -1, 0], [-1, 1, -1], [0, 1, 0]], (1, 1), 105, 'source/porte_scaphandre.png', OBJ_NAME[CAT_NAME[0]][4], False),
-        Object([[0, -1, 0], [-1, 1, -1], [0, 1, 0], [0, -1, 0]], (1, 1), 106, 'source/ecoutille.png', OBJ_NAME[CAT_NAME[0]][5], False)
+        Object([[1]], (0, 0), 101, 'source/coque.png', OBJ_NAME[CAT_NAME[0]][0], display_name=False),
+        Object([[1]], (0, 0), 102, 'source/mur.png', OBJ_NAME[CAT_NAME[0]][1], display_name=False),
+        Object([[-1, 1, -1]], (1, 0), 103, 'source/porte X1.png', OBJ_NAME[CAT_NAME[0]][2], display_name=False),
+        Object([[-1, 1, -1], [-1, 1, -1]], (1, 0), 104, 'source/porte X2.png', OBJ_NAME[CAT_NAME[0]][3], display_name=False),
+        Object([[0, -1, 0], [-1, 1, -1], [0, 1, 0]], (1, 1), 105, 'source/porte_scaphandre.png', OBJ_NAME[CAT_NAME[0]][4], display_name=False),
+        Object([[0, -1, 0], [-1, 1, -1], [0, 1, 0], [0, -1, 0]], (1, 1), 106, 'source/ecoutille.png', OBJ_NAME[CAT_NAME[0]][5], display_name=False)
     ],
     CAT_NAME[1]: [
         Object([[1, 1]], (0, 0), 201, 'source/lit.png', OBJ_NAME[CAT_NAME[1]][0]),
@@ -139,58 +141,58 @@ OBJ_DICT = {
         Object([[1, 1, -1], [1, 1, -1], [1, 1, -1]], (1, 1), 301, 'source/terminal.png', OBJ_NAME[CAT_NAME[2]][0]),
         Object([[1, 1], [-1, -1]], (1, 0), 302, 'source/paillasse.png', OBJ_NAME[CAT_NAME[2]][1]),
         Object([[1, -1], [1, 1]], (0, 0), 303, 'source/capsule.png', OBJ_NAME[CAT_NAME[2]][2]),
-        Object([[1, -1]], (0, 0), 304, 'source/cuve.png', OBJ_NAME[CAT_NAME[2]][4]),
-        Object([[1, -1], [1, 1]], (0, 0), 305, 'source/medical_bed.png', OBJ_NAME[CAT_NAME[2]][5]),
-        Object([[1, -1], [1, 0]], (0, 0), 306, 'source/toilette.png', OBJ_NAME[CAT_NAME[2]][6]),
-        Object([[1, -1]], (0, 0), 307, 'source/jukebox.png', OBJ_NAME[CAT_NAME[2]][7]),
-        Object([[1, -1], [1, -1]], (0, 0), 308, 'source/lit_augmentation.png', OBJ_NAME[CAT_NAME[2]][8]),
-        Object([[1, 0], [1, -1]], (0, 0), 309, 'source/oxygene.png', OBJ_NAME[CAT_NAME[2]][9]),
-        Object([[1, -1]], (0, 0), 310, 'source/epuratrice.png', OBJ_NAME[CAT_NAME[2]][10]),
-        Object([[1]], (0, 0), 311, 'source/chauffage.png', OBJ_NAME[CAT_NAME[2]][1])
+        Object([[1, -1]], (0, 0), 304, 'source/cuve.png', OBJ_NAME[CAT_NAME[2]][3]),
+        Object([[1, -1], [1, 1]], (0, 0), 305, 'source/medical_bed.png', OBJ_NAME[CAT_NAME[2]][4]),
+        Object([[1, -1], [1, 0]], (0, 0), 306, 'source/toilette.png', OBJ_NAME[CAT_NAME[2]][5]),
+        Object([[1, -1]], (0, 0), 307, 'source/jukebox.png', OBJ_NAME[CAT_NAME[2]][6]),
+        Object([[1, -1], [1, -1]], (0, 0), 308, 'source/lit_augmentation.png', OBJ_NAME[CAT_NAME[2]][7]),
+        Object([[1, 0], [1, -1]], (0, 0), 309, 'source/oxygene.png', OBJ_NAME[CAT_NAME[2]][8], -5),
+        Object([[1, -1]], (0, 0), 310, 'source/epuratrice.png', OBJ_NAME[CAT_NAME[2]][9], -15),
+        Object([[1]], (0, 0), 311, 'source/chauffage.png', OBJ_NAME[CAT_NAME[2]][10], -5)
     ],
     CAT_NAME[3]: [
-        Object([[1, 1, 1, -1], [1, 1, 1, -1]], (0, 0), 401, 'source/generatrice.png', OBJ_NAME[CAT_NAME[3]][0]),
+        Object([[1, 1, 1, -1], [1, 1, 1, -1]], (0, 0), 401, 'source/generatrice.png', OBJ_NAME[CAT_NAME[3]][0], 1000),
         Object([[1]], (0, 0), 402, 'source/petit_noeud.png', OBJ_NAME[CAT_NAME[3]][1]),
         Object([[1, 1]], (0, 0), 403, 'source/grand_noeud.png', OBJ_NAME[CAT_NAME[3]][2]),
         Object([[1, 1]], (0, 0), 404, 'source/batterie.png', OBJ_NAME[CAT_NAME[3]][3]),
         Object([[1, 1]], (0, 0), 405, 'source/secour.png', OBJ_NAME[CAT_NAME[3]][4]),
-        Object([[1, 1, 1, -1], [1, 1, 1, -1]], (1, 0), 406, 'source/generatrice_X1.png', OBJ_NAME[CAT_NAME[3]][5]),
-        Object([[1, 1, 1, -1], [1, 1, 1, -1], [1, 1, 1, -1]], (1, 0), 407, 'source/generatrice_X2.png', OBJ_NAME[CAT_NAME[3]][6]),
-        Object([[1, 1, 1, -1], [1, 1, 1, -1], [1, 1, 1, -1], [1, 1, 1, -1]], (1, 1), 408, 'source/generatrice_X3.png', OBJ_NAME[CAT_NAME[3]][7]),
+        Object([[1, 1, 1, -1], [1, 1, 1, -1]], (1, 0), 406, 'source/generatrice_X1.png', OBJ_NAME[CAT_NAME[3]][5], 1250),
+        Object([[1, 1, 1, -1], [1, 1, 1, -1], [1, 1, 1, -1]], (1, 0), 407, 'source/generatrice_X2.png', OBJ_NAME[CAT_NAME[3]][6], 1500),
+        Object([[1, 1, 1, -1], [1, 1, 1, -1], [1, 1, 1, -1], [1, 1, 1, -1]], (1, 1), 408, 'source/generatrice_X3.png', OBJ_NAME[CAT_NAME[3]][7], 2000),
         Object([[1, 1, 1], [1, 1, 1], [1, 1, 1]], (1, 1), 409, 'source/panneau.png', OBJ_NAME[CAT_NAME[3]][8])
     ],
     CAT_NAME[4]: [
         Object([[1, -1], [1, -1]], (0, 0), 501, 'source/etablie.png', OBJ_NAME[CAT_NAME[4]][0]),
         Object([[1, -1], [1, -1]], (0, 0), 502, 'source/outilleuse.png', OBJ_NAME[CAT_NAME[4]][1]),
-        Object([[1, -1], [1, -1]], (0, 0), 503, 'source/purificatrice.png', OBJ_NAME[CAT_NAME[4]][2]),
-        Object([[1, -1]], (0, 0), 504, 'source/deshumidificatrice.png', OBJ_NAME[CAT_NAME[4]][3]),
-        Object([[1, 1, 1, 1, 1, -1], [1, 1, 1, 1, 1, -1]], (2, 0), 505, 'source/trieuse.png', OBJ_NAME[CAT_NAME[4]][4]),
-        Object([[1, 1, -1, -1], [1, 1, 1, -1], [1, 1, 1, -1]], (1, 1), 506, 'source/recycleuse.png', OBJ_NAME[CAT_NAME[4]][5]),
-        Object([[1, 1, -1], [1, 1, -1]], (1, 0), 507, 'source/composteur.png', OBJ_NAME[CAT_NAME[4]][6]),
-        Object([[1, -1], [1, -1]], (0, 0), 508, 'source/imprimante.png', OBJ_NAME[CAT_NAME[4]][7]),
-        Object([[1, 1, 1, 1], [1, 1, 1, 1], [-1, -1, -1, -1]], (1, 1), 509, 'source/convertisseuse_metaux.png', OBJ_NAME[CAT_NAME[4]][8]),
-        Object([[1, 1, 1], [-1, -1, -1]], (1, 0), 510, 'source/tisseuse.png', OBJ_NAME[CAT_NAME[4]][9]),
-        Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 0), 511, 'source/assembleuse.png', OBJ_NAME[CAT_NAME[4]][10]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 1), 512, 'source/convertisseuse_energie.png', OBJ_NAME[CAT_NAME[4]][11]),
-        Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 1), 513, 'source/convertisseuse_chimique.png', OBJ_NAME[CAT_NAME[4]][12]),
-        Object([[1, 1, 1], [-1, 1, 1], [-1, -1, -1]], (1, 1), 514, 'source/imprimante_optronique.png', OBJ_NAME[CAT_NAME[4]][13]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1],[-1, -1, -1]], (1, 1), 514, 'source/assembleuse_avancee.png', OBJ_NAME[CAT_NAME[4]][14])
+        Object([[1, -1], [1, -1]], (0, 0), 503, 'source/purificatrice.png', OBJ_NAME[CAT_NAME[4]][2], -20),
+        Object([[1, -1]], (0, 0), 504, 'source/deshumidificatrice.png', OBJ_NAME[CAT_NAME[4]][3], -1),
+        Object([[1, 1, 1, 1, 1, -1], [1, 1, 1, 1, 1, -1]], (2, 0), 505, 'source/trieuse.png', OBJ_NAME[CAT_NAME[4]][4], -5),
+        Object([[1, 1, -1, -1], [1, 1, 1, -1], [1, 1, 1, -1]], (1, 1), 506, 'source/recycleuse.png', OBJ_NAME[CAT_NAME[4]][5], -60),
+        Object([[1, 1, -1], [1, 1, -1]], (1, 0), 507, 'source/composteur.png', OBJ_NAME[CAT_NAME[4]][6], -0.5),
+        Object([[1, -1], [1, -1]], (0, 0), 508, 'source/imprimante.png', OBJ_NAME[CAT_NAME[4]][7], -10),
+        Object([[1, 1, 1, 1], [1, 1, 1, 1], [-1, -1, -1, -1]], (1, 1), 509, 'source/convertisseuse_metaux.png', OBJ_NAME[CAT_NAME[4]][8], -200),
+        Object([[1, 1, 1], [-1, -1, -1]], (1, 0), 510, 'source/tisseuse.png', OBJ_NAME[CAT_NAME[4]][9], -20),
+        Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 0), 511, 'source/assembleuse.png', OBJ_NAME[CAT_NAME[4]][10], -40),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 1), 512, 'source/convertisseuse_energie.png', OBJ_NAME[CAT_NAME[4]][11], -100),
+        Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (1, 1), 513, 'source/convertisseuse_chimique.png', OBJ_NAME[CAT_NAME[4]][12], -100),
+        Object([[1, 1, 1], [-1, 1, 1], [-1, -1, -1]], (1, 1), 514, 'source/imprimante_optronique.png', OBJ_NAME[CAT_NAME[4]][13], -60),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1],[-1, -1, -1]], (1, 1), 514, 'source/assembleuse_avancee.png', OBJ_NAME[CAT_NAME[4]][14], -60)
     ],
     CAT_NAME[5]: [
-        Object([[1, 1], [-1, -1]], (0, 0), 601, 'source/algue.png', OBJ_NAME[CAT_NAME[5]][0]),
-        Object([[1, 1, 1], [-1, -1, -1]], (1, 0), 602, 'source/cuisine.png', OBJ_NAME[CAT_NAME[5]][1]),
-        Object([[1, 1], [-1, -1]], (0, 0), 603, 'source/alcool.png', OBJ_NAME[CAT_NAME[5]][2]),
+        Object([[1, 1], [-1, -1]], (0, 0), 601, 'source/algue.png', OBJ_NAME[CAT_NAME[5]][0], -1),
+        Object([[1, 1, 1], [-1, -1, -1]], (1, 0), 602, 'source/cuisine.png', OBJ_NAME[CAT_NAME[5]][1], -5),
+        Object([[1, 1], [-1, -1]], (0, 0), 603, 'source/alcool.png', OBJ_NAME[CAT_NAME[5]][2], -1),
         Object([[1, 1], [-1, -1]], (0, 0), 604, 'source/cultivatrice_x1.png', OBJ_NAME[CAT_NAME[5]][3]),
         Object([[1, 1, 1], [-1, -1, -1]], (0, 0), 605, 'source/cultivatrice_x2.png', OBJ_NAME[CAT_NAME[5]][4]),
         Object([[-1, -1, -1, -1], [-1, 1, 1, -1], [-1, 1, 1, -1], [-1, 1, 1, -1], [-1, -1, -1, -1]], (2, 1), 606, 'source/cultivatrice_x3.png', OBJ_NAME[CAT_NAME[5]][5]),
-        Object([[1, -1]], (0, 0), 607, 'source/productrice_O2.png', OBJ_NAME[CAT_NAME[5]][6]),
+        Object([[1, -1]], (0, 0), 607, 'source/productrice_O2.png', OBJ_NAME[CAT_NAME[5]][6], -5),
         Object([[-1, -1], [1, 1], [-1, -1]], (1, 0), 608, 'source/autopsie.png', OBJ_NAME[CAT_NAME[5]][7]),
     ],
     CAT_NAME[6]: [
         Object([[1, 1, -1]], (1, 0), 701, 'source/petit_stockage.png', OBJ_NAME[CAT_NAME[6]][0]),
         Object([[1, 1, 0], [1, 1, -1], [1, 1, 0]], (1, 1), 702, 'source/grand_stockage.png', OBJ_NAME[CAT_NAME[6]][1]),
         Object([[1, 1], [1, 1], [-1, -1]], (1, 0), 703, 'source/morgue.png', OBJ_NAME[CAT_NAME[6]][2]),
-        Object([[0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1], [-1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1], [0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1]], (5, 3), 704, 'source/port_amarrage.png', OBJ_NAME[CAT_NAME[6]][3], False),
+        Object([[0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1], [-1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1], [-1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1], [0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1]], (5, 3), 704, 'source/port_amarrage.png', OBJ_NAME[CAT_NAME[6]][3], display_name=False),
         # Port d'amarrage de station
     ],
     CAT_NAME[7]: [
@@ -200,24 +202,24 @@ OBJ_DICT = {
         Object([[-1, -1, -1, -1, -1, -1], [-1, 1, 1, 1, 1, -1], [-1, 1, 1, 1, 1, -1], [-1, 1, 1, 1, 1, -1], [-1, 1, 1, 1, 1, -1], [-1, 1, 1, 1, 1, -1], [-1, -1, -1, -1, -1, -1]], (3, 2), 804, 'source/navette.png', OBJ_NAME[CAT_NAME[7]][3])
     ],
     CAT_NAME[8]: [
-        Object([[1, 1], [1, 1], [-1, -1]], (0, 0), 901, 'source/noyau_x1.png', OBJ_NAME[CAT_NAME[8]][0]),
-        Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (0, 0), 902, 'source/noyau_x2.png', OBJ_NAME[CAT_NAME[8]][1]),
-        Object([[1, 1, 1, 1], [1, 1, 1, 1], [-1, -1, -1, -1]], (0, 0), 903, 'source/noyau_x3.png', OBJ_NAME[CAT_NAME[8]][2]),
-        Object([[1, 1], [-1, -1]], (0, 0), 904, 'source/stabilisateur_coque.png', OBJ_NAME[CAT_NAME[8]][3]),
+        Object([[1, 1], [1, 1], [-1, -1]], (0, 0), 901, 'source/noyau_x1.png', OBJ_NAME[CAT_NAME[8]][0], -5.1),
+        Object([[1, 1, 1], [1, 1, 1], [-1, -1, -1]], (0, 0), 902, 'source/noyau_x2.png', OBJ_NAME[CAT_NAME[8]][1], -5.2),
+        Object([[1, 1, 1, 1], [1, 1, 1, 1], [-1, -1, -1, -1]], (0, 0), 903, 'source/noyau_x3.png', OBJ_NAME[CAT_NAME[8]][2], -5.3),
+        Object([[1, 1], [-1, -1]], (0, 0), 904, 'source/stabilisateur_coque.png', OBJ_NAME[CAT_NAME[8]][3], -0.2),
         Object([[1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 905, 'source/console.png', OBJ_NAME[CAT_NAME[8]][4]),
         Object([[1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 906, 'source/console.png', OBJ_NAME[CAT_NAME[8]][5]),
         Object([[1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 907, 'source/console.png', OBJ_NAME[CAT_NAME[8]][6]),
         Object([[1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 908, 'source/console.png', OBJ_NAME[CAT_NAME[8]][7]),
-        Object([[-1, 1, 1, -1], [-1, 1, 1, -1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]], (2, 1), 909, 'source/hypermoteur.png', OBJ_NAME[CAT_NAME[8]][8]), # without the nope zone to note interacte with the border, may do this with the sas or rework the border system
-        Object([[-1, 1, 1, -1], [-1, 1, 1, -1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]], (2, 1), 910, 'source/hypermoteur.png', OBJ_NAME[CAT_NAME[8]][9]),
-        Object([[1, 1], [1, 1]], (0, 0), 911, 'source/petit_bouclier.png', OBJ_NAME[CAT_NAME[8]][10]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 912, 'source/bouclier.png', OBJ_NAME[CAT_NAME[8]][11]),
-        Object([[1, 1], [1, 1]], (0, 0), 913, 'source/tourelle_2x.png', OBJ_NAME[CAT_NAME[8]][12]),
-        Object([[1, 1], [1, 1]], (0, 0), 914, 'source/tourelle_2x.png', OBJ_NAME[CAT_NAME[8]][13]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 915, 'source/tourelle_3x.png', OBJ_NAME[CAT_NAME[8]][14]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 916, 'source/tourelle_3x.png', OBJ_NAME[CAT_NAME[8]][15]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1]], (1, 1), 917, 'source/scanneuse.png', OBJ_NAME[CAT_NAME[8]][16]),
-        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 918, 'source/brouilleur.png', OBJ_NAME[CAT_NAME[8]][17])
+        Object([[-1, 1, 1, -1], [-1, 1, 1, -1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]], (2, 1), 909, 'source/hypermoteur.png', OBJ_NAME[CAT_NAME[8]][8], -50), # without the nope zone to note interacte with the border, may do this with the sas or rework the border system
+        Object([[-1, 1, 1, -1], [-1, 1, 1, -1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]], (2, 1), 910, 'source/hypermoteur.png', OBJ_NAME[CAT_NAME[8]][9], -50),
+        Object([[1, 1], [1, 1]], (0, 0), 911, 'source/petit_bouclier.png', OBJ_NAME[CAT_NAME[8]][10], -80),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 912, 'source/bouclier.png', OBJ_NAME[CAT_NAME[8]][11], -80),
+        Object([[1, 1], [1, 1]], (0, 0), 913, 'source/tourelle_2x.png', OBJ_NAME[CAT_NAME[8]][12], -10),
+        Object([[1, 1], [1, 1]], (0, 0), 914, 'source/tourelle_2x.png', OBJ_NAME[CAT_NAME[8]][13], -50),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 915, 'source/tourelle_3x.png', OBJ_NAME[CAT_NAME[8]][14], -10),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 916, 'source/tourelle_3x.png', OBJ_NAME[CAT_NAME[8]][15], -100),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1]], (1, 1), 917, 'source/scanneuse.png', OBJ_NAME[CAT_NAME[8]][16], 20),
+        Object([[1, 1, 1], [1, 1, 1], [1, 1, 1], [0, -1, 0]], (1, 1), 918, 'source/brouilleur.png', OBJ_NAME[CAT_NAME[8]][17], -20)
     ]
     # robot, station
 }
